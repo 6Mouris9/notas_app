@@ -44,7 +44,7 @@ export class TaskService {
             if(params.title !== undefined || t.title.includes(params.title)){
                 match = true;
             }
-            if (params.status !== undefined || t.status.includes(params.status)) {
+            if (params.autor !== undefined || t.autor.includes(params.autor)) {
               match = true;
             }
             return match;
