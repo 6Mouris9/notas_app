@@ -3,6 +3,7 @@ import { TaskDto } from './task.dto.js';
 import type { FindAllParameters } from './task.dto.js';
 import { TaskService } from './task.service.js';
 import { Task } from './entities/task.entity.js';
+import { UpdateResult } from 'typeorm';
 
 @Controller('task')
 export class TaskController {
@@ -13,15 +14,19 @@ export class TaskController {
     return this.taskService.create(task);
   }
 
-  
   @Get()
   findAll(): Promise<Task[]> {
-     return this.taskService.findAll();
+    return this.taskService.findAll();
   }
 
-  @Get("/:title")
-  findByTitle(@Param("title") title: string): Promise<Task[]>{
-    return this.taskService.findByTitle(title); 
+  @Get('/:title')
+  findByTitle(@Param('title') title: string): Promise<Task[]> {
+    return this.taskService.findByTitle(title);
+  }
+
+  @Put()
+  updateById(@Query() params: { id: string }, @Body() task: TaskDto): Promise<UpdateResult> {
+    return this.taskService.updateById(params.id, task);
   }
 
   /*
@@ -49,4 +54,4 @@ export class TaskController {
   
   
   */
-  }
+}
