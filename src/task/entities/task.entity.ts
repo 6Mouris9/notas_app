@@ -20,6 +20,6 @@ export class Task {
     
     @ManyToMany(() => Tag, (tag) => tag.tasks, {cascade: true})
     @JoinTable()
-    tags: Tag[]
+    tags: Tag[];
 }
 

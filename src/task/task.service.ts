@@ -1,13 +1,22 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { FindAllParameters, TaskDto } from './task.dto.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Task } from './entities/task.entity.js';
+import { Repository } from 'typeorm';
+
 @Injectable()
 export class TaskService {
+    constructor(
+        @InjectRepository(Task)
+        private readonly taskRepository: Repository<Task>,
+    ){}
+    
     private tasks: TaskDto[] = []; //armazenamento em memoria
 
-    create(task: TaskDto): HttpStatus{
-        this.tasks.push(task);
-        console.log(this.tasks);
-        return HttpStatus.ACCEPTED;
+    async create(task: TaskDto): Promise<Task>{
+        const newTask = this.taskRepository.create(task);
+        
+        return await this.taskRepository.save(newTask);
     }
     findById(id: string): TaskDto{
         const foundTask = this.tasks.filter(t => t.id === id);
