@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query } fr
 import { TaskDto } from './task.dto.js';
 import type { FindAllParameters } from './task.dto.js';
 import { TaskService } from './task.service.js';
+import { Task } from './entities/task.entity.js';
 
 @Controller('task')
 export class TaskController {
@@ -10,6 +11,17 @@ export class TaskController {
   @Post()
   create(@Body() task: TaskDto) {
     return this.taskService.create(task);
+  }
+
+  
+  @Get()
+  findAll(): Promise<Task[]> {
+     return this.taskService.findAll();
+  }
+
+  @Get("/:title")
+  findByTitle(@Param("title") title: string): Promise<Task[]>{
+    return this.taskService.findByTitle(title); 
   }
 
   /*
@@ -37,4 +49,4 @@ export class TaskController {
   
   
   */
-}
+  }
