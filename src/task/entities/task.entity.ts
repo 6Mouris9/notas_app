@@ -3,7 +3,7 @@ import { Tag } from "./tag.entity.js";
 
 @Entity('tasks')
 export class Task {
-    @PrimaryGeneratedColumn('increment')
+    @PrimaryGeneratedColumn('uuid')
     id: number;
 
     @Column({ type: 'text' })

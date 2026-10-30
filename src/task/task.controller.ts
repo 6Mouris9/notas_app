@@ -7,15 +7,18 @@ import { TaskService } from './task.service.js';
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
+  @Post()
+  create(@Body() task: TaskDto) {
+    return this.taskService.create(task);
+  }
+
+  /*
   @Get()
   findAll(@Query() params: FindAllParameters): TaskDto[] {
     return this.taskService.findAll(params);
   }
 
-  @Post()
-  create(@Body() task: TaskDto) {
-    return this.taskService.create(task);
-  }
+  
 
   @Get('/:id')
   findById(@Param('id') id: string): TaskDto {
@@ -31,4 +34,7 @@ export class TaskController {
   delete(@Param('id') id: string) {
     return this.taskService.remove(id);
   }
+  
+  
+  */
 }

@@ -3,7 +3,7 @@ export class TaskDto{
     content: string;
     autor: string
     creationDate: Date;
-    tags: string[]
+    tags: []
 }
 
 export interface FindAllParameters{

@@ -15,9 +15,10 @@ export class TaskService {
 
     async create(task: TaskDto): Promise<Task>{
         const newTask = this.taskRepository.create(task);
-        
         return await this.taskRepository.save(newTask);
     }
+
+    /*
     findById(id: string): TaskDto{
         const foundTask = this.tasks.filter(t => t.id === id);
         if(foundTask.length){
@@ -59,4 +60,6 @@ export class TaskService {
             return match;
         })
     }
+        */
+       
 }
