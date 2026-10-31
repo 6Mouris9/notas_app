@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { FindAllParameters, TaskDto } from './task.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity.js';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { UpdateResult } from 'typeorm/browser';
 import { ObjectId } from 'typeorm/driver/mongodb/bson.typings.js';
 
@@ -15,8 +15,8 @@ export class TaskService {
 
   private tasks: TaskDto[] = []; //armazenamento em memoria
 
-  async create(task: TaskDto): Promise<Task> {
-    const newTask = this.taskRepository.create(task);
+  async create(taskDto: TaskDto): Promise<Task> {
+    const newTask = this.taskRepository.create(taskDto);
     return await this.taskRepository.save(newTask);
   }
 
@@ -25,42 +25,33 @@ export class TaskService {
   }
 
   async findByTitle(s_title: string): Promise<Task[]> {
-    const result = this.taskRepository.find({
-      where: { title: s_title },
+    return await this.taskRepository.find({
+      where: { title: ILike(`%${s_title}%`) },
       relations: { tags: true },
     });
-    return await result;
   }
 
-  async updateById(id: string, task: TaskDto): Promise<UpdateResult> {
-        return await this.taskRepository.update(id , { 
-            title: task.title,
-            autor: task.autor,
-            content: task.content,
-            tags: task.tags,
-            creationDate: task.creationDate,
-        });
-    
+  async updateById(id: string, taskDto: TaskDto): Promise<Task> {
+    const taskresp = await this.taskRepository.preload({
+      id: id,
+      ...taskDto,
+    });
+
+    if (!taskresp) {
+      throw new NotFoundException(`Tarefa com ID ${id} não encontrada`);
+    }
+    return await this.taskRepository.save(taskresp);
+  }
+
+  async remove(id: string): Promise<void> {
+    const result = await this.taskRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Tarefa com ID ${id} não encontrada`);
+    }
   }
 }
 
-    
-    
-    /*
   
 
-  remove(id: string) {
-    let taskIndex = this.tasks.findIndex((t) => t.id === id);
-    if (taskIndex >= 0) {
-      this.tasks.splice(taskIndex, 1);
-      return HttpStatus.OK;
-    } else
-      throw new HttpException(
-        `Task with id ${id} not found`,
-        HttpStatus.BAD_REQUEST,
-      );
 
-      }
-      
-}
-      */
+    

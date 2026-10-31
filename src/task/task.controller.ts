@@ -10,7 +10,7 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Post()
-  create(@Body() task: TaskDto) {
+  create(@Body() task: TaskDto): Promise<Task> {
     return this.taskService.create(task);
   }
 
@@ -19,14 +19,22 @@ export class TaskController {
     return this.taskService.findAll();
   }
 
-  @Get('/:title')
+  @Get('search/:title')
   findByTitle(@Param('title') title: string): Promise<Task[]> {
     return this.taskService.findByTitle(title);
   }
 
-  @Put()
-  updateById(@Query() params: { id: string }, @Body() task: TaskDto): Promise<UpdateResult> {
-    return this.taskService.updateById(params.id, task);
+  @Put('/:id')
+  updateById(
+    @Param('id') id: string, // Recebe o UUID como string
+    @Body() task: TaskDto,
+  ): Promise<Task> {
+    return this.taskService.updateById(id, task);
+  }
+
+  @Delete('/:id')
+  delete(@Param('id') id: string) {
+    return this.taskService.remove(id);
   }
 
   /*
@@ -47,10 +55,7 @@ export class TaskController {
     return this.taskService.update(task);
   }
 
-  @Delete('/:id')
-  delete(@Param('id') id: string) {
-    return this.taskService.remove(id);
-  }
+  
   
   
   */

@@ -4,9 +4,9 @@ import { Tag } from "./tag.entity.js";
 @Entity('tasks')
 export class Task {
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', unique: true })
     title: string;
 
     @Column({ type: 'text' })
